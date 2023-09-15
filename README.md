@@ -19,3 +19,10 @@ If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has a
 
 代码相似度检测工具
 
+测试运行
+```shell
+yarn build; yarn vite
+```
+
+src 为vue渲染进程代码
+electron 为 electron 主进程代码
