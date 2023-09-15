@@ -21,7 +21,7 @@ If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has a
 
 测试运行
 ```shell
-yarn build; yarn vite
+yarn vite
 ```
 
 src 为vue渲染进程代码
