@@ -14,6 +14,7 @@ function createWindow(){
         
         webPreferences: {
             // devTools: true,
+            preload: path.join(__dirname, "preload.js"),
         }
     });
 
@@ -24,8 +25,8 @@ function createWindow(){
         win.loadFile(path.join(__dirname, "dist/index.html"));  // 
     } else {
         win.loadURL(`${process.env['VITE_DEV_SERVER_URL']}`); // yarn run dev 开发模式，http 热更新
+        win.webContents.openDevTools();
     }
-    win.webContents.openDevTools();
 }
 
 function onReady(){
