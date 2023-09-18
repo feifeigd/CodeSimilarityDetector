@@ -10,6 +10,7 @@
                 </el-header>
                 <el-main style="background-color: aqua">
                     右侧
+                    <el-button>这是个按钮</el-button>
                 </el-main>
             </el-container>
         </el-container>
