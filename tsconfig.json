@@ -13,13 +13,20 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "preserve",
-
+    "baseUrl": "./",
+    "paths": {
+      "@/*": [
+        "src/*",
+      ],
+      "@components/*": ["src/components/*"]
+    },
     /* Linting */
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
+  
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

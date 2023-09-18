@@ -17,4 +17,9 @@ export default defineConfig({
       entry: "electron/preload.ts", // 预载脚本
     }]),
   ],
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "src"),
+    }
+  }
 });
