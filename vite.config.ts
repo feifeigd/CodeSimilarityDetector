@@ -14,6 +14,15 @@ const pathSrc = path.resolve(__dirname, "src");
 export default defineConfig({
   // base: path.resolve(__dirname, "./dist/"),
   base: "./",
+  css: {
+    preprocessorOptions: {
+      scss: {
+        // 覆盖 element 默认样式变量
+        additionalData: `@use "@/styles/element/index.scss" as *;`,
+      }
+    }
+  },
+
   plugins: [
     AutoImport({
       resolvers: [ElementPlusResolver()],
@@ -32,7 +41,7 @@ export default defineConfig({
 
     // 自动导入 element-plus 插件
     ElementPlus({
-
+      defaultLocale: "zh-cn",
     }),
 
     // 编译 vue 源码

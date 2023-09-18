@@ -12,9 +12,15 @@
     </a>
   </div> -->
   <!-- <HelloWorld msg="Vite + Vue" /> -->
-  <div>
-    <router-view></router-view>
-  </div>
+  
+  <!-- Config Provider 被用来提供全局的配置选项，让你的配置能够在全局都能够被访问到。 -->
+  <el-config-provider>
+    <div>
+      <RouterLink to="/element-plus">element-plus</RouterLink>
+      <router-view></router-view>
+    </div>
+  </el-config-provider>
+
 </template>
 
 <style scoped>
