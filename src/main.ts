@@ -1,5 +1,5 @@
 import { createApp } from 'vue'
-import './style.css'
+import './styles/index.scss'    // 需要安装 sass
 import App from './App.vue'
 
 import router from '@/router';
