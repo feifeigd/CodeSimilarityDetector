@@ -3,22 +3,36 @@
   "private": true,
   "version": "0.0.0",
   "main": "dist-electron/main.js",
+  "author": {
+    "name": "feifeigd",
+    "email": "feifeigd@21cn.com"
+  },
+  "description": "代码相似度检测工具",
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc && vite build",
     "preview": "vite preview",
-
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
-    "docs:serve": "vitepress serve docs"
+    "docs:serve": "vitepress serve docs",
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "make": "electron-forge make"
   },
   "dependencies": {
+    "electron-squirrel-startup": "^1.0.0",
     "element-plus": "^2.3.14",
     "vue": "^3.3.4",
     "vue-facing-decorator": "^3.0.2",
     "vue-router": "^4.2.4"
   },
   "devDependencies": {
+    "@electron-forge/cli": "^6.4.2",
+    "@electron-forge/maker-deb": "^6.4.2",
+    "@electron-forge/maker-rpm": "^6.4.2",
+    "@electron-forge/maker-squirrel": "^6.4.2",
+    "@electron-forge/maker-zip": "^6.4.2",
+    "@electron-forge/plugin-auto-unpack-natives": "^6.4.2",
     "@vitejs/plugin-vue": "^4.2.3",
     "electron": "^26.2.1",
     "sass": "^1.67.0",
@@ -28,6 +42,7 @@
     "unplugin-vue-components": "^0.25.2",
     "vite": "^4.4.5",
     "vite-plugin-electron": "^0.14.1",
+    "vite-plugin-obfuscator": "^1.0.5",
     "vitepress": "^1.0.0-rc.14",
     "vue-tsc": "^1.8.5"
   }

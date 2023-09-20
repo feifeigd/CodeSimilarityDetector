@@ -6,6 +6,7 @@ import AutoImport from "unplugin-auto-import/vite";
 import {ElementPlusResolver} from "unplugin-vue-components/resolvers";
 import Components from "unplugin-vue-components/vite";
 import ElementPlus from "unplugin-element-plus/vite";
+import {viteObfuscateFile} from "vite-plugin-obfuscator";
 
 // 源码根目录
 const pathSrc = path.resolve(__dirname, "src");
@@ -33,6 +34,8 @@ export default defineConfig({
     }),
 
     // 编译 electron, 每个 entry 编译成一个 js
+    // 注释下面，将不会打开 exe，而是只启动web服务器
+    // 目前 主进程只是压缩了，没有加密混淆
     electron([{
       entry: "electron/main.ts",  // 主进程
     },{
@@ -43,6 +46,10 @@ export default defineConfig({
     ElementPlus({
       defaultLocale: "zh-cn",
     }),
+
+    // 加密编译出的前端js, 加密会大两倍
+    // https://blog.csdn.net/qq_42135780/article/details/130647206
+    viteObfuscateFile({}),
 
     // 编译 vue 源码
     vue(),

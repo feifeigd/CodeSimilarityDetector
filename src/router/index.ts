@@ -1,4 +1,4 @@
-import { RouteRecordRaw, createRouter, createWebHistory } from "vue-router";
+import { RouteRecordRaw, createRouter, createWebHashHistory, createWebHistory } from "vue-router";
 
 const routes: RouteRecordRaw[] = [
     {
@@ -14,7 +14,7 @@ const routes: RouteRecordRaw[] = [
 ];
 
 const router = createRouter({
-    history: createWebHistory(),
+    history: createWebHistory(),    // 用createWebHistory模式，router-view 显示不出来；改为 createWebHashHistory 无问题
     routes,
 });
 

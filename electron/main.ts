@@ -1,7 +1,11 @@
 
-import { app, BrowserWindow, dialog, Tray } from "electron";
+import { app, BrowserWindow, dialog, ipcMain, MessageBoxOptions, Tray } from "electron";
 import { Application } from "./Application";
 import path from "path";
+import log  from "electron-log";
+import {format} from 'node:url';
+import fs from "fs";
+import { hashFile } from "./utils/FileHash";
 
 // 来强制沙盒化所有渲染器
 // 全局启用沙盒
@@ -16,17 +20,46 @@ function createWindow(){
         
         webPreferences: {
             // devTools: true,
-            preload: path.join(__dirname, "preload.js"),
+            preload: path.join(__dirname, "preload.js"),    // 脚本注入渲染进程，相对 main.js 目录 dist-electron
         }
+    });
+    win.webContents.on("render-process-gone", (e, details)=>{
+        const options: MessageBoxOptions = {
+            message: "这个进程已经崩溃",
+        };
+        function recordCrash(arg: any){
+            return new Promise(resolve => {
+                log.info(arg);
+                resolve(null);
+            })
+        }
+        recordCrash(details).then(()=>{
+            dialog.showMessageBox(options).then(({response})=>{
+                console.log(response);
+                if(response === 0)reloadWindow();
+                else app.quit();
+            }).catch(e=>{
+                console.log("err", e);
+            });
+
+        });
     });
 
     // win.loadFile("dist/index.html");
     const NODE_ENV = process.env.NODE_ENV;
     console.log(NODE_ENV, process.env['VITE_DEV_SERVER_URL'])
     // 新增判断当前环境
-    if (NODE_ENV !== 'development') {
+    if (NODE_ENV !== 'development') {   // 产品模式
         win.loadFile(path.join(__dirname, "../dist/index.html"));  // file://
+        // win.loadURL(format({
+        //     pathname: path.join(__dirname, "../dist/index.html"),   // 渲染进程的入口点
+        //     protocol: "file:",
+        //     slashes: true,
+        // }));
+
         traypath = path.join(__dirname, "vite.svg");
+        
+        win.webContents.openDevTools(); // 产品模式 不用开这个
     } else {
         win.loadURL(`${process.env['VITE_DEV_SERVER_URL']}`); // yarn run dev 开发模式，http 热更新
         
@@ -36,14 +69,22 @@ function createWindow(){
     }
     console.log(traypath)
     closeWin(win);
-    // createtray();
+    // createtray();    
+}
+
+function reloadWindow(){
+    app.relaunch();
+    app.exit(0);
 }
 
 function onReady(){
 
 }
+
 // app.whenReady().then(createWindow);
 const _ = new Application(app, createWindow, onReady);
+registerIpc();
+
 
 // 关闭前确认
 function closeWin(win: BrowserWindow){
@@ -79,10 +120,53 @@ function closeWin(win: BrowserWindow){
     });
 }
 
-function createtray(){
-    const tray = new Tray(traypath);
-    tray.setToolTip("hehe");
-    tray.on("click", ()=>{
+// function createtray(){
+//     const tray = new Tray(traypath);
+//     tray.setToolTip("hehe");
+//     tray.on("click", ()=>{
 
+//     });
+// }
+
+// 导出给前端调用
+function registerIpc(){
+    ipcMain.handle("open_dir", handleFileOPen);
+}
+
+async function handleFileOPen(_: any, typ: string){
+    const ret = await dialog.showOpenDialog({properties: ['openDirectory']});
+    const { canceled, filePaths } = ret;
+    if(!canceled){
+        CalcHash(filePaths[0], typ, filePaths[0]);
+    }
+    return ret;
+}
+
+function CalcHash(root: string, typ: string, dir: string){
+    fs.readdir(dir, (err, list)=>{
+        if(err){
+            console.error(err);
+            return;
+        }
+        // console.log(dir,list)
+        list.map(node=>{
+            const filepath = path.join(dir, node);
+            fs.stat(filepath, (err, desc)=>{
+                if(err){
+                    console.error(err);
+                    return;
+                }
+
+                if(desc.isDirectory()){
+                    CalcHash(root, typ, filepath);
+                }else if(desc.isFile()){
+                    // 计算文件hash
+                    hashFile(filepath, "MD5").then(hash=>{
+                        console.log(hash, path.relative(root, filepath) );
+                        // 发给前端
+                    }).catch(err=>console.error(err));
+                }
+            })
+        })
     });
 }
