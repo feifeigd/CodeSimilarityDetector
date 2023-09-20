@@ -1,9 +1,9 @@
 
-import{App, BrowserWindow, IpcMainEvent, ipcMain} from "electron";
+import{app, BrowserWindow, IpcMainEvent, ipcMain} from "electron";
 
 export class Application{
     
-    constructor(private app: App, private createWindow: ()=>void, private OnReady?: ()=>void){
+    constructor(private createWindow: ()=>void, private OnReady?: ()=>void){
         
         const promise = app.whenReady().then(this.createWindow);
         if(OnReady)promise.then(this.OnReady);

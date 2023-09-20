@@ -82,7 +82,7 @@ function onReady(){
 }
 
 // app.whenReady().then(createWindow);
-const _ = new Application(app, createWindow, onReady);
+const _ = new Application(createWindow, onReady);
 registerIpc();
 
 
