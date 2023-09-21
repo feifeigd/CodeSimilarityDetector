@@ -13,7 +13,7 @@ import { hashFile } from "./utils/FileHash";
 
 let traypath: string;
 
-function createWindow(){
+function createWindow(): BrowserWindow{
     const win = new BrowserWindow({
         width: 800,
         height: 600,
@@ -70,6 +70,7 @@ function createWindow(){
     console.log(traypath)
     closeWin(win);
     // createtray();    
+    return win;
 }
 
 function reloadWindow(){
@@ -82,7 +83,8 @@ function onReady(){
 }
 
 // app.whenReady().then(createWindow);
-const _ = new Application(createWindow, onReady);
+const a = new Application(createWindow, onReady);
+
 registerIpc();
 
 
@@ -162,9 +164,11 @@ function CalcHash(root: string, typ: string, dir: string){
                 }else if(desc.isFile()){
                     // 计算文件hash
                     hashFile(filepath, "MD5").then(hash=>{
-                        console.log(hash, path.relative(root, filepath) );
+                        const relative_path = path.relative(root, filepath);
+                        console.log(hash, relative_path, );
                         // 发给前端
-                    }).catch(err=>console.error(err));
+                        a.MainWindow?.webContents.send("add_file_hash", {typ, hash,  path: relative_path, });
+                    }).catch(err=>console.error("catch error:", err));
                 }
             })
         })

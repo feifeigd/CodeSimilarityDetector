@@ -1,22 +1,23 @@
 {
   "compilerOptions": {
     "baseUrl": ".",
-    "target": "ESNext",
-    "useDefineForClassFields": true,
-    "module": "ESNext",
+    "target": "ESNext", // 将代码编译为最新版本的 JS
+    "useDefineForClassFields": true,  // 使用 Object.defineProperty 定义 class 中的属性，而非使用 obj.key = value 的形式定义属性
+    "module": "ESNext", // 使用 ES Module 格式打包编译后的文件
     "lib": ["ESNext", "DOM", "DOM.Iterable"],
-    "skipLibCheck": true,
+    "skipLibCheck": true, // 跳过对 .d.ts 文件的类型检查
 
     /* Bundler mode */
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
-    "resolveJsonModule": true,
-    "esModuleInterop": true,
-    "isolatedModules": true,
+    "resolveJsonModule": true,  // 允许引入 JSON 文件
+    "esModuleInterop": true,  // 允许使用 import 引入使用 export = 导出的内容
+    "isolatedModules": true,  // 该属性要求所有文件都是 ES Module 模块。
     "noEmit": true,
-    "jsx": "preserve",
-    "sourceMap": true,
+    "jsx": "preserve",  // 使用 ES Module 格式打包编译后的文件
+    "sourceMap": true,  // 生成 sourceMap 文件
     "paths": {
+      // yarn build 的时候需要 @
       "@/*": [
         "src/*",
       ],
@@ -32,16 +33,18 @@
   },
 
   // 类型库 *.d.ts 查找目录
-  "typings": ["./electron/typing"],
+  // "typings": ["./electron/typing"],
 
   "vueCompilerOptions": {
     "target": 3
   },
   
+  // 针对这些文件，使用以上配置
   "include": [
     "src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", // 渲染进程
-    "electron/**/*.ts", // 主进程
+    "electron/typing",  // 预载接口，要导给前端
   ],
 
+  // 对其他 nodejs 文件的特定配置，这些不需要引入 dom
   "references": [{ "path": "./tsconfig.node.json" }]
 }

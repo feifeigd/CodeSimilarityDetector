@@ -3,14 +3,19 @@ import{app, BrowserWindow, IpcMainEvent, ipcMain} from "electron";
 
 export class Application{
     
-    constructor(private createWindow: ()=>void, private OnReady?: ()=>void){
+    private main_window: BrowserWindow | null = null;
+
+    constructor(private createWindow: ()=>BrowserWindow, private OnReady?: ()=>void){
         
-        const promise = app.whenReady().then(this.createWindow);
+        const promise = app.whenReady().then(()=> this. main_window = createWindow());
         if(OnReady)promise.then(this.OnReady);
         
         app.on("activate", ()=>{
-            if(BrowserWindow.getAllWindows().length === 0)
-                this.createWindow();
+            console.log("激活窗口");
+            if(BrowserWindow.getAllWindows().length === 0){
+                this.main_window = createWindow();
+                console.log("activate: ", this.main_window);
+            }
         });
 
         app.on("window-all-closed", ()=>{
@@ -25,4 +30,8 @@ export class Application{
             win?.setTitle(title);
         });
     }    
+
+    get MainWindow(){
+        return this.main_window;
+    }
 }

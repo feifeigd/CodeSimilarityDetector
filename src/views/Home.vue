@@ -62,6 +62,17 @@ class Home extends Vue{
     dstFiles:FileInfo[] = []
     // count = 3;
 
+    mounted(){
+        // 接收主进程发来的消息
+        window.ipc.add_file_hash((event, obj)=>{
+            console.log(event, obj);
+            const {typ, hash, path} = obj;
+            if(typ == "src"){
+                this.srcFiles.push({hash, path});
+            }
+        });
+    }
+
     async onclick(tpe: string){
         const { canceled, filePaths} = await window.ipc.open_dir(tpe);
         if(!canceled){

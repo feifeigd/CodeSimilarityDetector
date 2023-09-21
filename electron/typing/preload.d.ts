@@ -3,6 +3,7 @@
 
 export interface IIpc{
     open_dir: (typ: string)=>Promise<Electron.OpenDialogReturnValue>,
+    add_file_hash: (callback: (event: IpcRendererEvent, ...args: any[]) => void)=>Promise<void>,
 }
 
 declare global {

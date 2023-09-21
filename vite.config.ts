@@ -56,6 +56,7 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
+      // yarn dev 的时候需要 @
       "@": pathSrc, // 组件 vue / ts 里用 "@/ooxx" 导入
     }
   }
