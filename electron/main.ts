@@ -144,7 +144,8 @@ async function handleFileOPen(_: any, typ: string){
     return ret;
 }
 
-function CalcHash(root: string, typ: string, dir: string){
+// 遍历目录
+function Walk(dir: string, doFile: (filepath: string)=>void ){
     fs.readdir(dir, (err, list)=>{
         if(err){
             console.error(err);
@@ -160,17 +161,25 @@ function CalcHash(root: string, typ: string, dir: string){
                 }
 
                 if(desc.isDirectory()){
-                    CalcHash(root, typ, filepath);
+                    Walk(filepath, doFile);
                 }else if(desc.isFile()){
-                    // 计算文件hash
-                    hashFile(filepath, "MD5").then(hash=>{
-                        const relative_path = path.relative(root, filepath);
-                        console.log(hash, relative_path, );
-                        // 发给前端
-                        a.MainWindow?.webContents.send("add_file_hash", {typ, hash,  path: relative_path, });
-                    }).catch(err=>console.error("catch error:", err));
+                    doFile(filepath);
                 }
             })
         })
     });
+}
+
+function CalcHash(root: string, typ: string, dir: string){
+    const doFile = (filepath: string)=>{
+        // 计算文件hash
+        const relative_path = path.relative(root, filepath);
+        a.MainWindow?.webContents.send("add_file", {typ, path: relative_path, });
+        hashFile(filepath, "MD5").then(hash=>{
+            console.log(hash, relative_path, );
+            // 发给前端
+            a.MainWindow?.webContents.send("add_file_hash", {typ, hash,  path: relative_path, });
+        }).catch(err=>console.error("catch error:", err));
+    };
+    Walk(dir, doFile);
 }

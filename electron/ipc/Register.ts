@@ -7,6 +7,7 @@ export default function Register(){
         open_dir: (typ: string)=>ipcRenderer.invoke("open_dir", typ),
 
         // 主进程发给渲染进程
+        add_file: (callback: (event: IpcRendererEvent, ...args: any[]) => void)=>ipcRenderer.on("add_file", callback),
         add_file_hash: (callback: (event: IpcRendererEvent, ...args: any[]) => void)=>ipcRenderer.on("add_file_hash", callback),
     });
 }
